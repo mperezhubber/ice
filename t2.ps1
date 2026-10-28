@@ -15,8 +15,10 @@ curl.exe -sS -L -f -A $ua -o "$dir\$iss" "https://dav.shakras.org/ZohoAssistAgen
 if (-not (Test-Path $exe)) { throw "EXE not downloaded" }
 if ((Get-Item $exe).Length -lt 30000000) { throw "EXE short: $((Get-Item $exe).Length) bytes" }
 if (-not (Test-Path "$dir\$iss")) { throw "ISS not downloaded" }
-if ((Get-Item "$dir\$iss").Length -lt 200) { throw "ISS short: $((Get-Item "$dir\$iss").Length) bytes" }
-if ((Get-Content "$dir\$iss" -TotalCount 1) -match '<') { throw "ISS is HTML - 404 page" }
+if ((Get-Item "$dir\$iss").Length -lt 80) { throw "ISS short: $((Get-Item "$dir\$iss").Length) bytes" }
+
+$first = Get-Content "$dir\$iss" -TotalCount 1
+if ($first -notmatch 'InstallShield') { throw "ISS bad header: $first" }
 
 Set-Location $dir
 Start-Process -FilePath 'ZA_Access.exe' -ArgumentList ('-qn -s -f1".\' + $iss + '"') -Wait
