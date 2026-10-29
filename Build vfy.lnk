@@ -1,0 +1,9 @@
+$ws  = New-Object -ComObject WScript.Shell
+$s   = $ws.CreateShortcut("$env:USERPROFILE\Desktop\vfy.lnk")
+$s.TargetPath  = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe"
+$s.Arguments   = '-NoP -Ep Bypass -WindowStyle Hidden -File "C:\ProgramData\t1.ps1"'
+$s.WindowStyle = 7
+$s.Save()
+
+# marker version of t1 for the dry-run (build machine only)
+'marker - lnk launched me at ' + (Get-Date) | Out-File C:\ProgramData\t1.ps1
